@@ -32,6 +32,8 @@ struct ContentView: View {
   @ObservedObject var taskStore: TaskStore
   @State var modalIsPresented = false
     @State var todayItemsPresented = false
+    @State var tomorrowItemsPresented: Bool = false
+    @State var somedayItemsPresented: Bool = false
    
 
   
@@ -46,7 +48,7 @@ struct ContentView: View {
             NavigationView {
                 List {
                     ForEach(taskStore.prioritizedTasks) { index in
-                        SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index])
+                        SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index], filter: SectionView.Filter.none)
                     }
                 }
                 .listStyle( GroupedListStyle() )
@@ -66,7 +68,7 @@ struct ContentView: View {
                 NewTaskView(taskStore: self.taskStore)
             }
             
-            TodayTomorrow(todayCount: taskStore.dayCounts["today"]!, tmwCount: taskStore.dayCounts["tomorrow"]!, somedayCount: taskStore.dayCounts["someday"]!, todayItemsPresented: $todayItemsPresented)
+            TodayTomorrow(todayCount: taskStore.dayCounts["today"]!, tmwCount: taskStore.dayCounts["tomorrow"]!, somedayCount: taskStore.dayCounts["someday"]!, todayItemsPresented: $todayItemsPresented, tomorrowItemsPresented: $tomorrowItemsPresented, somedayItemsPresented: $somedayItemsPresented)
                 
                 
             Rectangle()
@@ -81,7 +83,35 @@ struct ContentView: View {
                 List {
                     
                     ForEach(taskStore.prioritizedTasks) { index in
-                        SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index])
+                        SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index], filter: .today)
+                    }
+                }
+                       
+            }
+            
+            
+        }
+        .sheet(isPresented: $tomorrowItemsPresented) {
+            
+            NavigationView {
+                List {
+                    
+                    ForEach(taskStore.prioritizedTasks) { index in
+                        SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index], filter: .tomorrow)
+                    }
+                }
+                       
+            }
+            
+            
+        }
+        .sheet(isPresented: $somedayItemsPresented) {
+            
+            NavigationView {
+                List {
+                    
+                    ForEach(taskStore.prioritizedTasks) { index in
+                        SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index], filter: .someday)
                     }
                 }
                        

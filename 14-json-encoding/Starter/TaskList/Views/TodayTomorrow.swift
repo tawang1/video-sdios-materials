@@ -14,6 +14,8 @@ struct TodayTomorrow: View {
   var tmwCount: Int
   var somedayCount: Int
     @Binding var todayItemsPresented: Bool
+    @Binding var tomorrowItemsPresented: Bool
+    @Binding var somedayItemsPresented: Bool
   
   var body: some View {
     HStack (spacing: 5) {
@@ -24,12 +26,21 @@ struct TodayTomorrow: View {
             SubCircle(text: "TO \n DAY", count: todayCount )
         }
         .foregroundColor(.black)
+        Button {
+            tomorrowItemsPresented.toggle()
+        } label: {
+            SubCircle(text: "TMR \n W", count: tmwCount)
+        }
+        .foregroundColor(.black)
+        Button {
+            somedayItemsPresented.toggle()
+        } label: {
+            SubCircle(text: "SOME \n DAY", count: somedayCount)
+        }
+        .foregroundColor(.black)
         
-        
-        
-        SubCircle(text: "TMR \n W", count: tmwCount)
-        SubCircle(text: "SOME \n DAY", count: somedayCount)
         Spacer()
+        
       }
       .padding(.vertical)
       .background(Color("rw-light"))
@@ -60,7 +71,7 @@ struct SubCircle: View {
 
 struct TodayTomorrow_Previews: PreviewProvider {
     static var previews: some View {
-        TodayTomorrow(todayCount: 5, tmwCount: 5, somedayCount: 5, todayItemsPresented: .constant(true))
+        TodayTomorrow(todayCount: 5, tmwCount: 5, somedayCount: 5, todayItemsPresented: .constant(true), tomorrowItemsPresented: .constant(false), somedayItemsPresented: .constant(false))
     }
 }
 

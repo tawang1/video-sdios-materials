@@ -29,16 +29,24 @@
 import SwiftUI
 
 struct SectionView: View {
+    enum Filter: String {
+        case none, today, tomorrow, someday
+    }
+    
   @Binding var prioritizedTasks: TaskStore.PrioritizedTasks
-  
+    let filter: Filter
+    
   var body: some View {
     Section(
       header: Text(
         "\(prioritizedTasks.priority.rawValue.capitalized) Priority"
       )
     ) {
-      ForEach(prioritizedTasks.tasks) { index in
-          RowView(task: self.$prioritizedTasks.tasks[index], day: self.$prioritizedTasks.tasks[index].day)
+        ForEach(prioritizedTasks.tasks) { index in
+            if self.prioritizedTasks.tasks[index].day.rawValue == filter.rawValue || filter == .none {
+                RowView(task: self.$prioritizedTasks.tasks[index], day: self.$prioritizedTasks.tasks[index].day)
+            }
+            
       }
       .onMove { sourceIndices, destinationIndex in
         self.prioritizedTasks.tasks.move(
