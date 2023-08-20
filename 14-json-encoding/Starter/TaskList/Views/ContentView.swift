@@ -31,34 +31,71 @@ import SwiftUI
 struct ContentView: View {
   @ObservedObject var taskStore: TaskStore
   @State var modalIsPresented = false
+    @State var todayItemsPresented = false
+   
+
   
-  var body: some View {
-    NavigationView {
-      List {
-        ForEach(taskStore.prioritizedTasks) { index in
-          SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index])
+  
+    var body: some View {
+        
+        
+        VStack (spacing: 0) {
+            
+            
+            
+            NavigationView {
+                List {
+                    ForEach(taskStore.prioritizedTasks) { index in
+                        SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index])
+                    }
+                }
+                .listStyle( GroupedListStyle() )
+                .navigationBarTitle("Tasks", displayMode: .large)
+                .navigationBarItems(
+                    leading: EditButton(),
+                    trailing:
+                        Button(
+                            action: { self.modalIsPresented = true }
+                            
+                        ) {
+                            Image(systemName: "plus")
+                        }
+                )
+            }
+            .sheet(isPresented: $modalIsPresented) {
+                NewTaskView(taskStore: self.taskStore)
+            }
+            
+            TodayTomorrow(todayCount: taskStore.dayCounts["today"]!, tmwCount: taskStore.dayCounts["tomorrow"]!, somedayCount: taskStore.dayCounts["someday"]!, todayItemsPresented: $todayItemsPresented)
+                
+                
+            Rectangle()
+                .foregroundColor(Color("rw-light"))
+                .edgesIgnoringSafeArea(.all)
+                .frame(height: 5)
+            
         }
-      }
-      .listStyle( GroupedListStyle() )
-      .navigationBarTitle("Tasks")
-      .navigationBarItems(
-        leading: EditButton(),
-        trailing:
-          Button(
-            action: { self.modalIsPresented = true }
-          ) {
-            Image(systemName: "plus")
-          }
-      )
+        .sheet(isPresented: $todayItemsPresented) {
+            
+            NavigationView {
+                List {
+                    
+                    ForEach(taskStore.prioritizedTasks) { index in
+                        SectionView(prioritizedTasks: self.$taskStore.prioritizedTasks[index])
+                    }
+                }
+                       
+            }
+            
+            
+        }
     }
-    .sheet(isPresented: $modalIsPresented) {
-      NewTaskView(taskStore: self.taskStore)
-    }
+  }
+
+
+struct ContentView_Previews:  PreviewProvider {
+  static var previews: some View {
+      ContentView( taskStore: TaskStore() )
   }
 }
 
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-    ContentView( taskStore: TaskStore() )
-  }
-}

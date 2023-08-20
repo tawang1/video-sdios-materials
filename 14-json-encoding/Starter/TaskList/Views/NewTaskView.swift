@@ -28,48 +28,70 @@
 
 import SwiftUI
 
-struct NewTaskView: View {
-  var taskStore: TaskStore
-  
-  @Environment(\.presentationMode) var presentationMode
-  
-  @State var text = ""
-  @State var priority: Task.Priority = .no
-  
-  var body: some View {
-    Form {
-      TextField("Task Name", text: $text)
-      
-      VStack {
-        Text("Priority")
-        
-        Picker("Priority", selection: $priority.caseIndex) {
-          ForEach(Task.Priority.allCases.indices) { priorityIndex in
-            Text(
-              Task.Priority.allCases[priorityIndex].rawValue
-                .capitalized
-            )
-              .tag(priorityIndex)
-          }
-        }
-        .pickerStyle( SegmentedPickerStyle() )
-      }
-      
-      Button("Add") {
-        let priorityIndex = self.taskStore.getIndex(for: self.priority)
-        self.taskStore.prioritizedTasks[priorityIndex].tasks.append(
-          Task(name: self.text)
-        )
-        
-        self.presentationMode.wrappedValue.dismiss()
-      }
-      .disabled(text.isEmpty)
-    }
-  }
-}
 
-struct NewTaskView_Previews: PreviewProvider {
-  static var previews: some View {
-    NewTaskView( taskStore: TaskStore() )
-  }
+
+struct NewTaskView: View {
+    var taskStore: TaskStore
+    
+    
+    
+    @Environment(\.presentationMode) var presentationMode
+    
+    @State var text = ""
+    @State var priority: Task.Priority = .no
+    @State var day: Task.Day = .none
+    
+    
+    var body: some View {
+        Form {
+            TextField("Task Name", text: $text)
+            
+            VStack {
+                Text("Priority")
+                
+                Picker("Priority", selection: $priority) {
+                    ForEach(Task.Priority.allCases, id:\.self) { priority in
+                        Text(
+                            priority.rawValue.capitalized
+                        )
+                    }
+                }
+                .pickerStyle( SegmentedPickerStyle() )
+                
+                Text("Day")
+                
+                Picker("Day", selection: $day) {
+                    ForEach(Task.Day.allCases, id: \.self) { day in
+                        Text(
+                            day.rawValue.capitalized
+                        )
+                    }
+                }
+                .pickerStyle( SegmentedPickerStyle() )
+            }
+            
+            Button("Add") {
+                let priorityIndex = self.taskStore.getIndex(for: self.priority)
+                let task = Task(name: self.text, day: self.day)
+                 self.taskStore
+                    .prioritizedTasks[priorityIndex]
+                    .tasks
+                    .append(task)
+                taskStore.getDayCount()
+                self.presentationMode.wrappedValue.dismiss()
+            }
+            .disabled(text.isEmpty)
+            
+        }
+        
+    }
+    
+    
+    
+    
+    struct NewTaskView_Previews: PreviewProvider {
+        static var previews: some View {
+            NewTaskView( taskStore: TaskStore() )
+        }
+    }
 }

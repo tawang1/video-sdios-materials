@@ -30,4 +30,10 @@ extension Task {
   enum Priority: String, CaseIterable, Codable {
     case no, low, medium, high
   }
+  
+  enum Day: String, CaseIterable, Codable {
+    case none, today, tomorrow, someday
+  }
+
+  
 }

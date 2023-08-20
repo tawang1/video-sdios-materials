@@ -29,11 +29,17 @@
 import SwiftUI
 
 struct TaskEditingView: View {
+  @Binding var taskStore: TaskStore
   @Binding var task: Task
-    
+  
+  let dict: [Task.Priority:Task.ID] = [:]
+  taskStore.prioritizedTasks
+  
+  
   var body: some View {
     Form {
       TextField("Name", text: $task.name)
+      TextField("Priority", text: $taskStore.prioritizedTasks.priority)
       Toggle("Completed", isOn: $task.completed)
     }.navigationBarTitle(task.name)
   }
@@ -42,7 +48,7 @@ struct TaskEditingView: View {
 struct TaskEditingView_Previews: PreviewProvider {
   static var previews: some View {
     TaskEditingView(
-      task: .constant( Task(name: "To Do") )
+      taskStore: .constant(TaskStore()), task: .constant( Task(name: "To Do"))
     )
   }
 }

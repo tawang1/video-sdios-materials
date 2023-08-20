@@ -27,7 +27,7 @@
 /// THE SOFTWARE.
 
 extension TaskStore {
-  struct PrioritizedTasks {
+  struct PrioritizedTasks: Codable {
     let priority: Task.Priority
     var tasks: [Task]
   }

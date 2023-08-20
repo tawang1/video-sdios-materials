@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-public extension Binding where Value: CaseIterable & Equatable {
+public extension Binding where Value: CaseIterable & Equatable & BinaryInteger {
   var caseIndex: Binding<Value.AllCases.Index> {
     Binding<Value.AllCases.Index>(
       get: { Value.allCases.firstIndex(of: self.wrappedValue)! },

@@ -33,4 +33,12 @@ struct Task: Identifiable, Codable {
   
   var name: String
   var completed = false
+  var day: Task.Day
+  
+  enum CodingKeys: String, CodingKey {
+    case id = "identifier"
+    case name
+    case completed = "isComplete"
+    case day 
+  }
 }

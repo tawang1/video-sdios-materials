@@ -29,6 +29,7 @@
 		5589F395233063AA008D3719 /* PrioritizedTask.json in Resources */ = {isa = PBXBuildFile; fileRef = 5589F394233063AA008D3719 /* PrioritizedTask.json */; };
 		55AD6ADB2330857C00623E01 /* Tasks.json in Resources */ = {isa = PBXBuildFile; fileRef = 55AD6ADA2330857C00623E01 /* Tasks.json */; };
 		55AD6ADD2330858C00623E01 /* PrioritizedTasks.json in Resources */ = {isa = PBXBuildFile; fileRef = 55AD6ADC2330858C00623E01 /* PrioritizedTasks.json */; };
+		916D37F22A8C3C6B00F0BAA6 /* TodayTomorrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916D37F12A8C3C6B00F0BAA6 /* TodayTomorrow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		5589F394233063AA008D3719 /* PrioritizedTask.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PrioritizedTask.json; sourceTree = "<group>"; };
 		55AD6ADA2330857C00623E01 /* Tasks.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Tasks.json; sourceTree = "<group>"; };
 		55AD6ADC2330858C00623E01 /* PrioritizedTasks.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PrioritizedTasks.json; sourceTree = "<group>"; };
+		916D37F12A8C3C6B00F0BAA6 /* TodayTomorrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTomorrow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 				49FA301B22DC987B00E4CA56 /* RowView.swift */,
 				49BBDA0F22ECF0EE00376C62 /* SectionView.swift */,
 				491C6E2822DF6DFA00C55030 /* TaskEditingView.swift */,
+				916D37F12A8C3C6B00F0BAA6 /* TodayTomorrow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				49EEFE4E232484F6002A7EA8 /* TaskStore.PrioritizedTasks.swift in Sources */,
 				49A2856322DC34F600B65A77 /* SceneDelegate.swift in Sources */,
 				49A2856522DC34F600B65A77 /* ContentView.swift in Sources */,
+				916D37F22A8C3C6B00F0BAA6 /* TodayTomorrow.swift in Sources */,
 				493268BD2313A343005F77B2 /* IndexedCollection.swift in Sources */,
 				491C6E2922DF6DFA00C55030 /* TaskEditingView.swift in Sources */,
 				49FA301C22DC987B00E4CA56 /* RowView.swift in Sources */,

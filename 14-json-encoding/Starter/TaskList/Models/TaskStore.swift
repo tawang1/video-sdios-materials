@@ -29,11 +29,31 @@
 import Combine
 import Foundation
 
-class TaskStore: ObservableObject {    
-  @Published var prioritizedTasks: [PrioritizedTasks] = []
+class TaskStore: ObservableObject {
+  let tasksJSONURL = URL(fileURLWithPath: "Tasks",
+                         relativeTo: FileManager.documentsDirectoryURL).appendingPathExtension("json")
+  let tasksPlistURL = URL(fileURLWithPath: "Tasks", relativeTo: FileManager.documentsDirectoryURL).appendingPathExtension("plist")
+  
+    @Published var dayCounts: [String:Int] = ["today":0, "tomorrow": 0, "someday":0]
+    @Published var todayTasks: [Task] = []
+    @Published var tomorrowTasks: [Task] = []
+    @Published var someday: [Task] = []
+    
+    @Published var prioritizedTasks: [PrioritizedTasks] = [
+    PrioritizedTasks(priority: .high, tasks: []),
+    PrioritizedTasks(priority: .medium, tasks: []),
+    PrioritizedTasks(priority: .low, tasks: []),
+    PrioritizedTasks(priority: .no, tasks: [])] {
+    didSet {
+      //saveJSONPrioritizedTasks()
+      savePlistPrioritizedTasks()
+    }
+  }
   
   init() {
-    loadJSONPrioritizedTasks()
+    //loadJSONPrioritizedTasks()
+    loadPlistPrioritizedTasks()
+      getDayCount()
   }
   
   func getIndex(for priority: Task.Priority) -> Int {
@@ -41,8 +61,6 @@ class TaskStore: ObservableObject {
   }
   
   private func loadJSONPrioritizedTasks() {
-    let tasksJSONURL = URL(fileURLWithPath: "PrioritizedTasks",
-                           relativeTo: FileManager.documentsDirectoryURL).appendingPathExtension("json")
     
     let decoder = JSONDecoder()
     
@@ -53,13 +71,99 @@ class TaskStore: ObservableObject {
       print(error)
     }
   }
+  
+  private func loadPlistPrioritizedTasks() {
+    guard FileManager.default.fileExists(atPath: tasksPlistURL.path) else {
+      return
+    }
+    
+    let decoder = PropertyListDecoder()
+    
+    do {
+      let tasksData = try Data(contentsOf: tasksPlistURL)
+      prioritizedTasks = try decoder.decode([PrioritizedTasks].self, from: tasksData)
+    } catch let error {
+      print(error)
+    }
+  }
+  
+  
+  private func saveJSONPrioritizedTasks() {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = .prettyPrinted
+    
+    do {
+      
+      let tasksData = try encoder.encode(prioritizedTasks)
+      
+      
+
+      try tasksData.write(to: tasksJSONURL, options: .atomicWrite)
+      
+      
+    } catch let error {
+      print(error)
+    }
+  }
+  
+  private func savePlistPrioritizedTasks() {
+    let encoder = PropertyListEncoder()
+    encoder.outputFormat = .xml
+    
+    do {
+      let tasksData = try encoder.encode(prioritizedTasks)
+
+      
+      try tasksData.write(to: tasksPlistURL, options: .atomicWrite)
+    } catch let error {
+      print(error)
+    }
+  }
+    
+    
+
+    
+    func getDayCount() {
+        let tasks = prioritizedTasks.flatMap{ prioritizedTasks in
+            prioritizedTasks.tasks
+        }
+        var today: Int = 0
+        var tomorrow: Int = 0
+        var someday: Int = 0
+        for task in tasks {
+            if task.completed == false {
+                switch task.day {
+                case .today:
+                    today += 1
+                case .tomorrow:
+                    tomorrow += 1
+                case .someday:
+                    someday += 1
+                case .none:
+                    continue
+                }
+            }
+        }
+        dayCounts["today"] = today
+        dayCounts["tomorrow"] = tomorrow
+        dayCounts["someday"] = someday
+    
+        
+    }
+  
+  
+  
 }
+
+
+
+
 
 private extension TaskStore.PrioritizedTasks {
   init(priority: Task.Priority, names: [String]) {
     self.init(
       priority: priority,
-      tasks: names.map { Task(name: $0) }
+      tasks: names.map { Task(name: $0, day: .someday) } //check day because JSON files dont have day tag
     )
   }
 }

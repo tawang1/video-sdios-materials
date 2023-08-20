@@ -38,7 +38,7 @@ struct SectionView: View {
       )
     ) {
       ForEach(prioritizedTasks.tasks) { index in
-        RowView(task: self.$prioritizedTasks.tasks[index])
+          RowView(task: self.$prioritizedTasks.tasks[index], day: self.$prioritizedTasks.tasks[index].day)
       }
       .onMove { sourceIndices, destinationIndex in
         self.prioritizedTasks.tasks.move(

@@ -29,20 +29,29 @@
 import SwiftUI
 
 struct TaskEditingView: View {
-  @Binding var task: Task
+    @Binding var task: Task
+    @Binding var day: Task.Day
     
-  var body: some View {
-    Form {
-      TextField("Name", text: $task.name)
-      Toggle("Completed", isOn: $task.completed)
-    }.navigationBarTitle(task.name)
-  }
+    var body: some View {
+        Form {
+            TextField("Name", text: $task.name)
+            Picker(selection: $day, label: Text("Day")) {
+                ForEach(Task.Day.allCases, id:\.self) { day in
+                    Text(day.rawValue.capitalized)
+                }
+            }
+        
+            Toggle("Completed", isOn: $task.completed)
+        }.navigationBarTitle(task.name)
+    }
 }
 
+
+
 struct TaskEditingView_Previews: PreviewProvider {
-  static var previews: some View {
-    TaskEditingView(
-      task: .constant( Task(name: "To Do") )
-    )
-  }
+    static var previews: some View {
+        TaskEditingView(
+            task: .constant( Task(name: "To Do", day: .someday) )
+            , day: .constant(.someday))
+    }
 }
